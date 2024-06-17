@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 connection = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='',
     database='dump-dw_aw'
 )
 
