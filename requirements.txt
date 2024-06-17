@@ -1,5 +1,5 @@
 streamlit
 pandas
-mysql.connector-2.2.9.tar.gz
+mysql-connector-python-8.4.0.tar.gz
 matplotlib.pyplot
 python
