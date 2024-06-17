@@ -1,6 +1,4 @@
-streamlit
-pandas
-mysql-connector-python-8.4.0
-Python 3.12.3
+streamlit==1.35.0
+pandas==2.2.2
+mysql-connector-python==8.4.0
 matplotlib.pyplot
-python
