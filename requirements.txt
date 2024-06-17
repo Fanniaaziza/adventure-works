@@ -1,5 +1,6 @@
 streamlit
 pandas
 mysql-connector-python-8.4.0
+Python 3.12.3
 matplotlib.pyplot
 python
