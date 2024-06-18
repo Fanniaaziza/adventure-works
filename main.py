@@ -15,3 +15,11 @@ conn = pymysql.connect(
 # Cek koneksi berhasil
 if conn:
     print('Connected to MySQL database')
+
+# Query data dari database
+query = "SELECT * from dimpromotion"
+data = pd.read_sql(query, conn)
+
+# Menampilkan data dalam bentuk tabel di Streamlit
+st.write("Data dari Database:")
+st.dataframe(data)
