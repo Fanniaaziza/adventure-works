@@ -2,6 +2,7 @@ import pymysql
 import pandas as pd
 from sqlalchemy import create_engine
 import streamlit as st
+import matplotlib.pyplot as plt
 
 # Membuat koneksi ke database MySQL
 conn = pymysql.connect(
@@ -25,14 +26,17 @@ query = """
     ORDER BY CalendarYear
 """
 
-# Menampilkan judul dashboard
-st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
+# Menjalankan query dan membuat DataFrame dari hasilnya
+df_sales = pd.read_sql(query, conn)
 
-# Membuat DataFrame dari hasil query
-df_sales = pd.DataFrame(data, columns=['Year', 'TotalSales'])
+# Menutup koneksi setelah selesai digunakan
+conn.close()
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
+
+# Menampilkan judul dashboard
+st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
 # Menampilkan DataFrame di Streamlit dalam bentuk tabel
 st.subheader('1. Data Penjualan Tahunan')
