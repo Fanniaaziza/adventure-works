@@ -3,6 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 import streamlit as st
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Membuat koneksi ke database MySQL
 conn = pymysql.connect(
@@ -31,12 +32,18 @@ GROUP BY Country
 # Membuat DataFrame dari hasil query
 df_bubble = pd.read_sql(query, conn)
 
+# Menutup koneksi setelah selesai digunakan
+conn.close()
+
+# Menambahkan pilihan warna menggunakan widget Streamlit
+color = st.selectbox("Pilih Warna:", ['blue', 'red', 'green', 'purple'])
+
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
 plt.scatter(x=df_bubble['Country'], 
             y=df_bubble['TotalSales'],
             s=df_bubble['TotalSales'] / 1000,  # Ukuran bubble diatur lebih kecil untuk visibilitas yang lebih baik
-            c='b',
+            c=color,  # Memilih warna berdasarkan pilihan pengguna
             alpha=0.6,  # Menambahkan transparansi untuk visibilitas yang lebih baik
             edgecolors='w',  # Menambahkan border putih pada bubble
             linewidth=0.5)
@@ -48,6 +55,10 @@ plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
 
 # Menambahkan grid untuk memudahkan pembacaan plot
 plt.grid(True)
+
+# Menambahkan legenda untuk warna yang dipilih
+st.text("Legenda:")
+st.text("Total Sales")
 
 # Menampilkan plot di Streamlit
 st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
