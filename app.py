@@ -14,16 +14,16 @@ conn = mysql.connector.connect(
 )
 
 # Membuat engine SQLAlchemy untuk koneksi ke MySQL
-#engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
 
 # Cek koneksi berhasil
 if conn:
     print('Connected to MySQL database')
 
 # Membuat cursor
-#cursor = connection.cursor()
+cursor = connection.cursor()
 
-# Query SQL untuk mengambil data penjualan per tahun
+#Query SQL untuk mengambil data penjualan per tahun
 query = """
     SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
     FROM dimtime
@@ -33,12 +33,12 @@ query = """
 """
 
 # Eksekusi query
-#cursor.execute(query)
-#data = cursor.fetchall()
+cursor.execute(query)
+data = cursor.fetchall()
 
 # Menutup cursor dan koneksi database
-#cursor.close()
-#connection.close()
+cursor.close()
+connection.close()
 
 # Menjalankan query dan membuat DataFrame dari hasilnya
 df_sales = pd.read_sql(query, conn)
