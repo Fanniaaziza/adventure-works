@@ -30,7 +30,7 @@ query = """
 df_sales = pd.read_sql(query, conn)
 
 # Menutup koneksi setelah selesai digunakan
-conn.close()
+#conn.close()
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
@@ -76,6 +76,9 @@ GROUP BY Country
 
 # Membuat DataFrame dari hasil query
 df_bubble = pd.read_sql(query, conn)
+
+# Menutup koneksi setelah selesai digunakan
+conn.close()
 
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
