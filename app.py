@@ -62,3 +62,39 @@ plt.grid(True)
 # Menampilkan plot di Streamlit
 st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
 st.pyplot(plt)
+
+# Query data untuk bubble plot
+query = '''
+SELECT 
+  st.SalesTerritoryRegion AS Country,
+  SUM(fs.SalesAmount) AS TotalSales  
+FROM factinternetsales fs
+JOIN dimsalesterritory st
+  ON fs.SalesTerritoryKey = st.SalesTerritoryKey
+GROUP BY Country
+'''
+
+# Membuat DataFrame dari hasil query
+df_bubble = pd.read_sql(query, conn)
+
+# Tambahkan argumen s untuk ukuran bubble
+plt.figure(figsize=(14, 12))
+plt.scatter(x=df_bubble['Country'], 
+            y=df_bubble['TotalSales'],
+            s=df_bubble['TotalSales'] / 1000,  # Ukuran bubble diatur lebih kecil untuk visibilitas yang lebih baik
+            c='b',
+            alpha=0.6,  # Menambahkan transparansi untuk visibilitas yang lebih baik
+            edgecolors='w',  # Menambahkan border putih pada bubble
+            linewidth=0.5)
+
+# Menambahkan label untuk sumbu x dan y serta judul plot
+plt.xlabel('Country')
+plt.ylabel('Total Sales')  
+plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
+
+# Menambahkan grid untuk memudahkan pembacaan plot
+plt.grid(True)
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
+st.pyplot(plt)
