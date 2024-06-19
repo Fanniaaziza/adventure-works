@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
 # Membuat koneksi ke database MySQL
-conn = pymysql.connect(
+conn = mysql.connector.connect(
     host="kubela.id",
     port=3306,
     user="davis2024irwan",
