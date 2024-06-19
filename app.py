@@ -1,11 +1,11 @@
-import mysql.connector
-import streamlit as st
+import pymysql
 import pandas as pd
-import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
+import streamlit as st
+import matplotlib.pyplot as plt
 
-# Membuat koneksi ke database MySQL menggunakan mysql.connector
-conn = mysql.connector.connect(
+# Membuat koneksi ke database MySQL
+conn = pymysql.connect(
     host="kubela.id",
     port=3306,
     user="davis2024irwan",
@@ -13,15 +13,9 @@ conn = mysql.connector.connect(
     database="aw"
 )
 
-# Membuat engine SQLAlchemy untuk koneksi ke MySQL
-engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
-
 # Cek koneksi berhasil
-if conn.is_connected():
+if conn:
     print('Connected to MySQL database')
-
-# Membuat cursor
-cursor = conn.cursor()
 
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
@@ -32,16 +26,11 @@ query = """
     ORDER BY CalendarYear
 """
 
-# Eksekusi query dengan cursor
-cursor.execute(query)
-data = cursor.fetchall()
+# Menjalankan query dan membuat DataFrame dari hasilnya
+df_sales = pd.read_sql(query, conn)
 
-# Menutup cursor dan koneksi database
-cursor.close()
+# Menutup koneksi setelah selesai digunakan
 conn.close()
-
-# Menjalankan query dan membuat DataFrame dari hasilnya menggunakan SQLAlchemy engine
-df_sales = pd.read_sql(query, engine)
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
@@ -69,6 +58,10 @@ plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}',
 plt.xlabel('Tahun', fontsize=14)
 plt.ylabel('Total Penjualan', fontsize=14)
 plt.grid(True)
+
+# Menampilkan plot di Streamlit
+st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
+st.pyplot(plt)
 
 # Menampilkan plot di Streamlit
 st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan</h2>", unsafe_allow_html=True)
