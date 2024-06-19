@@ -85,7 +85,7 @@ cursor.close()
 conn.close()
 
 # Membuat DataFrame dari hasil query
-df_bubble = pd.DataFrame(data_bubble, columns=['Country', 'TotalSales'])
+df_bubble = pd.DataFrame(query, columns=['Country', 'TotalSales'])
 
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
