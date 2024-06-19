@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
-# Membuat koneksi ke database MySQL
+# Membuat koneksi ke database MySQL menggunakan mysql.connector
 conn = mysql.connector.connect(
     host="kubela.id",
     port=3306,
@@ -17,13 +17,13 @@ conn = mysql.connector.connect(
 engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
 
 # Cek koneksi berhasil
-if conn:
+if conn.is_connected():
     print('Connected to MySQL database')
 
 # Membuat cursor
-cursor = connection.cursor()
+cursor = conn.cursor()
 
-#Query SQL untuk mengambil data penjualan per tahun
+# Query SQL untuk mengambil data penjualan per tahun
 query = """
     SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
     FROM dimtime
@@ -32,19 +32,16 @@ query = """
     ORDER BY CalendarYear
 """
 
-# Eksekusi query
+# Eksekusi query dengan cursor
 cursor.execute(query)
 data = cursor.fetchall()
 
 # Menutup cursor dan koneksi database
 cursor.close()
-connection.close()
-
-# Menjalankan query dan membuat DataFrame dari hasilnya
-df_sales = pd.read_sql(query, conn)
-
-# Menutup koneksi setelah selesai digunakan
 conn.close()
+
+# Menjalankan query dan membuat DataFrame dari hasilnya menggunakan SQLAlchemy engine
+df_sales = pd.read_sql(query, engine)
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
@@ -74,5 +71,5 @@ plt.ylabel('Total Penjualan', fontsize=14)
 plt.grid(True)
 
 # Menampilkan plot di Streamlit
-st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan</h2>", unsafe_allow_html=True)
 st.pyplot(plt)
