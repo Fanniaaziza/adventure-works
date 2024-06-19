@@ -77,8 +77,15 @@ JOIN dimsalesterritory st
 GROUP BY Country
 '''
 
+# Eksekusi query dan ambil data
+cursor = conn.cursor()
+cursor.execute(query_bubble)
+data_bubble = cursor.fetchall()
+cursor.close()
+conn.close()
+
 # Membuat DataFrame dari hasil query
-df_bubble = pd.DataFrame(query, engine)
+df_bubble = pd.DataFrame(data_bubble, columns=['Country', 'TotalSales'])
 
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
