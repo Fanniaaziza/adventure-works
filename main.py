@@ -21,7 +21,7 @@ if conn:
     print('Connected to MySQL database')
 
 # Membuat cursor
-cursor = connection.cursor()
+#cursor = connection.cursor()
 
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
