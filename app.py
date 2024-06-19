@@ -29,9 +29,6 @@ query = """
 # Menjalankan query dan membuat DataFrame dari hasilnya
 df_sales = pd.read_sql(query, conn)
 
-# Menutup koneksi setelah selesai digunakan
-#conn.close()
-
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
 
@@ -77,9 +74,6 @@ GROUP BY Country
 # Membuat DataFrame dari hasil query
 df_bubble = pd.read_sql(query, conn)
 
-# Menutup koneksi setelah selesai digunakan
-conn.close()
-
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
 plt.scatter(x=df_bubble['Country'], 
@@ -100,4 +94,30 @@ plt.grid(True)
 
 # Menampilkan plot di Streamlit
 st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
+st.pyplot(plt)
+
+# Query data untuk pie chart
+query = '''
+SELECT
+    st.SalesTerritoryRegion,
+    SUM(fs.SalesAmount) AS TotalSales
+FROM
+    factinternetsales fs
+JOIN
+    dimsalesterritory st ON fs.SalesTerritoryKey = st.SalesTerritoryKey
+GROUP BY
+    st.SalesTerritoryRegion
+'''
+
+# Jalankan query dan simpan hasilnya ke dalam DataFrame
+df_sales_by_region = pd.read_sql(query, engine)
+
+# Buat visualisasi proporsi penjualan per wilayah atau region
+plt.figure(figsize=(10, 6))
+plt.pie(df_sales_by_region['TotalSales'], labels=df_sales_by_region['SalesTerritoryRegion'], autopct='%1.1f%%', startangle=140)
+plt.title('Proporsi Penjualan per Wilayah atau Region')
+plt.axis('equal')  # Membuat pie chart menjadi lingkaran
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>3. Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
 st.pyplot(plt)
