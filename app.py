@@ -62,7 +62,3 @@ plt.grid(True)
 # Menampilkan plot di Streamlit
 st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
 st.pyplot(plt)
-
-# Menampilkan plot di Streamlit
-st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan</h2>", unsafe_allow_html=True)
-st.pyplot(plt)
