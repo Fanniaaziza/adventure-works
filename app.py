@@ -21,7 +21,7 @@ if conn:
     print('Connected to MySQL database')
 
 # Membuat cursor
-cursor = connection.cursor()
+#cursor = connection.cursor()
 
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
@@ -33,12 +33,12 @@ query = """
 """
 
 # Eksekusi query
-cursor.execute(query)
-data = cursor.fetchall()
+#cursor.execute(query)
+#data = cursor.fetchall()
 
 # Menutup cursor dan koneksi database
-cursor.close()
-connection.close()
+#cursor.close()
+#connection.close()
 
 # Menampilkan judul dashboard
 st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
