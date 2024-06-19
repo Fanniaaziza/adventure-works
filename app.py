@@ -3,9 +3,10 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 
-# Fungsi untuk membuat koneksi ke database MySQL
-def create_connection():
+# Fungsi untuk membuat koneksi ke database MySQL menggunakan mysql.connector
+def create_mysql_connector_connection():
     try:
         conn = mysql.connector.connect(
             host="kubela.id",
@@ -15,20 +16,30 @@ def create_connection():
             database="aw"
         )
         if conn.is_connected():
-            print('Connected to MySQL database')
+            print('Connected to MySQL database using mysql.connector')
             return conn
     except mysql.connector.Error as err:
         print(f"Error: {err}")
         st.error(f"Error: {err}")
         return None
 
+# Fungsi untuk membuat koneksi ke database MySQL menggunakan SQLAlchemy
+def create_sqlalchemy_engine():
+    try:
+        engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+        conn = engine.connect()
+        print('Connected to MySQL database using SQLAlchemy')
+        return engine
+    except OperationalError as err:
+        print(f"Error: {err}")
+        st.error(f"Error: {err}")
+        return None
+
 # Membuat koneksi ke database
-conn = create_connection()
+conn = create_mysql_connector_connection()
+engine = create_sqlalchemy_engine()
 
-if conn:
-    # Membuat engine SQLAlchemy untuk koneksi ke MySQL
-    engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
-
+if conn and engine:
     # Query SQL untuk mengambil data penjualan per tahun
     query_sales_yearly = """
         SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
