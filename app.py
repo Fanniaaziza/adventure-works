@@ -121,3 +121,44 @@ plt.axis('equal')  # Membuat pie chart menjadi lingkaran
 # Menampilkan plot di Streamlit
 st.markdown("<h2 style='text-align: center;'>3. Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
 st.pyplot(plt)
+
+# Query data untuk bar plot
+query = '''
+SELECT
+    pc.EnglishProductCategoryName AS ProductCategory,
+    SUM(fs.SalesAmount) AS TotalSales
+FROM
+    factinternetsales fs
+JOIN
+    dimproduct p ON fs.ProductKey = p.ProductKey
+JOIN
+    dimproductsubcategory psc ON p.ProductSubcategoryKey = psc.ProductSubcategoryKey
+JOIN
+    dimproductcategory pc ON psc.ProductCategoryKey = pc.ProductCategoryKey
+GROUP BY
+    pc.EnglishProductCategoryName
+'''
+
+# Baca ke DataFrame
+df = pd.read_sql(query, conn)
+
+# Menutup koneksi setelah selesai digunakan
+conn.close()
+
+# Buat figure dan axes
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Plot bar (lebih cocok daripada histogram untuk kategori)
+ax.bar(df['ProductCategory'], df['TotalSales'], color='blue')
+
+# Setting label        
+ax.set(title='Komposisi Penjualan per Kategori Produk',
+       ylabel='Total Penjualan',   
+       xlabel='Kategori Produk')
+
+# Rotasi label x untuk lebih baik
+plt.xticks(rotation=45)
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>4. Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
+st.pyplot(fig)
