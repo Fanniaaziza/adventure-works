@@ -33,8 +33,8 @@ query = """
 """
 
 # Eksekusi query
-#cursor.execute(query)
-#data = cursor.fetchall()
+cursor.execute(query)
+data = cursor.fetchall()
 
 # Menutup cursor dan koneksi database
 #cursor.close()
