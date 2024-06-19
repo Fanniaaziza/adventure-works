@@ -7,8 +7,8 @@ from sqlalchemy import create_engine
 # Membuat engine SQLAlchemy untuk koneksi ke MySQL
 engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
 
-# Koneksi ke database
-conn = pymysql.connect(
+# Membuat koneksi ke database MySQL
+conn = mysql.connector.connect(
     host="kubela.id",
     port=3306,
     user="davis2024irwan",
@@ -17,7 +17,7 @@ conn = pymysql.connect(
 )
 
 # Cek koneksi berhasil
-if connection.is_connected():
+if conn:
     print('Connected to MySQL database')
 
 # Membuat cursor
