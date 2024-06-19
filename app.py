@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
 
 # Membuat koneksi ke database MySQL
-conn = pymysql.connect(
+conn = mysql.connect(
     host="kubela.id",
     port=3306,
     user="davis2024irwan",
