@@ -2,23 +2,26 @@ import mysql.connector
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
 
 # Membuat koneksi ke database MySQL
-connection = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    database='dump-dw_aw'
+conn = mysql.connector.connect(
+    host="kubela.id",
+    port=3306,
+    user="davis2024irwan",
+    password="wh451n9m@ch1n3",
+    database="aw"
 )
 
+# Membuat engine SQLAlchemy untuk koneksi ke MySQL
+engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+
 # Cek koneksi berhasil
-if connection.is_connected():
+if conn:
     print('Connected to MySQL database')
 
-# Membuat cursor
-cursor = connection.cursor()
-
 # Query SQL untuk mengambil data penjualan per tahun
-query = """
+query_sales_yearly = """
     SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
     FROM dimtime
     JOIN factfinance ON dimtime.TimeKey = factfinance.TimeKey
@@ -26,22 +29,17 @@ query = """
     ORDER BY CalendarYear
 """
 
-# Eksekusi query
-cursor.execute(query)
-data = cursor.fetchall()
+# Menjalankan query dan membuat DataFrame dari hasilnya
+df_sales = pd.read_sql(query_sales_yearly, conn)
 
-# Menutup cursor dan koneksi database
-cursor.close()
-connection.close()
-
-# Menampilkan judul dashboard
-st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
-
-# Membuat DataFrame dari hasil query
-df_sales = pd.DataFrame(data, columns=['Year', 'TotalSales'])
+# Menutup koneksi setelah selesai digunakan
+conn.close()
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
+
+# Menampilkan judul dashboard
+st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
 # Menampilkan DataFrame di Streamlit dalam bentuk tabel
 st.subheader('1. Data Penjualan Tahunan')
@@ -67,3 +65,101 @@ plt.grid(True)
 # Menampilkan plot di Streamlit
 st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
 st.pyplot(plt)
+
+# Query data untuk bubble plot
+query_bubble = '''
+SELECT 
+  st.SalesTerritoryRegion AS Country,
+  SUM(fs.SalesAmount) AS TotalSales  
+FROM factinternetsales fs
+JOIN dimsalesterritory st
+  ON fs.SalesTerritoryKey = st.SalesTerritoryKey
+GROUP BY Country
+'''
+
+# Membuat DataFrame dari hasil query
+df_bubble = pd.read_sql(query_bubble, engine)
+
+# Buat bubble plot
+plt.figure(figsize=(14, 12))
+plt.scatter(x=df_bubble['Country'], 
+            y=df_bubble['TotalSales'],
+            s=df_bubble['TotalSales'] / 1000,  # Ukuran bubble diatur lebih kecil untuk visibilitas yang lebih baik
+            c='b',
+            alpha=0.6,  # Menambahkan transparansi untuk visibilitas yang lebih baik
+            edgecolors='w',  # Menambahkan border putih pada bubble
+            linewidth=0.5)
+
+# Menambahkan label untuk sumbu x dan y serta judul plot
+plt.xlabel('Country')
+plt.ylabel('Total Sales')  
+plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
+plt.grid(True)
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
+st.pyplot(plt)
+
+# Query data untuk pie chart
+query_pie = '''
+SELECT
+    st.SalesTerritoryRegion,
+    SUM(fs.SalesAmount) AS TotalSales
+FROM
+    factinternetsales fs
+JOIN
+    dimsalesterritory st ON fs.SalesTerritoryKey = st.SalesTerritoryKey
+GROUP BY
+    st.SalesTerritoryRegion
+'''
+
+# Jalankan query dan simpan hasilnya ke dalam DataFrame
+df_sales_by_region = pd.read_sql(query_pie, engine)
+
+# Buat visualisasi proporsi penjualan per wilayah atau region
+plt.figure(figsize=(10, 6))
+plt.pie(df_sales_by_region['TotalSales'], labels=df_sales_by_region['SalesTerritoryRegion'], autopct='%1.1f%%', startangle=140)
+plt.title('Proporsi Penjualan per Wilayah atau Region')
+plt.axis('equal')  # Membuat pie chart menjadi lingkaran
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>3. Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
+st.pyplot(plt)
+
+# Query data untuk bar plot
+query_bar = '''
+SELECT
+    pc.EnglishProductCategoryName AS ProductCategory,
+    SUM(fs.SalesAmount) AS TotalSales
+FROM
+    factinternetsales fs
+JOIN
+    dimproduct p ON fs.ProductKey = p.ProductKey
+JOIN
+    dimproductsubcategory psc ON p.ProductSubcategoryKey = psc.ProductSubcategoryKey
+JOIN
+    dimproductcategory pc ON psc.ProductCategoryKey = pc.ProductCategoryKey
+GROUP BY
+    pc.EnglishProductCategoryName
+'''
+
+# Baca ke DataFrame
+df = pd.read_sql(query_bar, engine)
+
+# Buat figure dan axes
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Plot bar (lebih cocok daripada histogram untuk kategori)
+ax.bar(df['ProductCategory'], df['TotalSales'], color='blue')
+
+# Setting label        
+ax.set(title='Komposisi Penjualan per Kategori Produk',
+       ylabel='Total Penjualan',   
+       xlabel='Kategori Produk')
+
+# Rotasi label x untuk lebih baik
+plt.xticks(rotation=45)
+
+# Menampilkan plot di Streamlit
+st.markdown("<h2 style='text-align: center;'>4. Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
+st.pyplot(fig)
