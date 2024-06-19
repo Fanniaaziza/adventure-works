@@ -20,13 +20,6 @@ conn = pymysql.connect(
 if conn:
     print('Connected to MySQL database')
 
-# Eksekusi query dan ambil data
-cursor = conn.cursor()
-cursor.execute(query)
-data = cursor.fetchall()
-cursor.close()
-conn.close()
-
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
     SELECT CalendarYear AS Year, SUM(factfinance.Amount) AS TotalSales
@@ -35,6 +28,13 @@ query = """
     GROUP BY CalendarYear
     ORDER BY CalendarYear
 """
+
+# Eksekusi query dan ambil data
+cursor = conn.cursor()
+cursor.execute(query)
+data = cursor.fetchall()
+cursor.close()
+conn.close()
 
 # Menampilkan judul dashboard
 st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
