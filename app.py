@@ -58,16 +58,8 @@ year_range = st.slider('Pilih Rentang Tahun:', min_value=min(tahun_options), max
 # Filter data berdasarkan rentang tahun yang dipilih
 df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
 
-# Plot perbandingan total penjualan per tahun dengan Matplotlib
-plt.figure(figsize=(12, 6))
-plt.plot(df_filtered['Year'], df_filtered['TotalSales'], marker='o', linestyle='-', color='b', linewidth=2, markersize=8)
-plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}', fontsize=16)
-plt.xlabel('Tahun', fontsize=14)
-plt.ylabel('Total Penjualan', fontsize=14)
-plt.grid(True)
-
 # Query data untuk bubble plot
-query = '''
+query_bubble = '''
 SELECT 
   st.SalesTerritoryRegion AS Country,
   SUM(fs.SalesAmount) AS TotalSales  
@@ -77,17 +69,10 @@ JOIN dimsalesterritory st
 GROUP BY Country
 '''
 
-# Eksekusi query dan ambil data
-cursor = conn.cursor()
-cursor.execute(query)
-data_bubble = cursor.fetchall()
-cursor.close()
-conn.close()
+# Mengambil data untuk bubble plot
+df_bubble = run_query(query_bubble)
 
-# Membuat DataFrame dari hasil query
-df_bubble = pd.DataFrame(query, columns=['Country', 'TotalSales'])
-
-# Tambahkan argumen s untuk ukuran bubble
+# Membuat bubble plot
 plt.figure(figsize=(14, 12))
 plt.scatter(x=df_bubble['Country'], 
             y=df_bubble['TotalSales'],
@@ -101,13 +86,8 @@ plt.scatter(x=df_bubble['Country'],
 plt.xlabel('Country')
 plt.ylabel('Total Sales')  
 plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
-
-# Menambahkan grid untuk memudahkan pembacaan plot
 plt.grid(True)
 
 # Menampilkan plot di Streamlit
 st.markdown("<h2 style='text-align: center;'>2. Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
-st.pyplot(plt)
-# Menampilkan plot di Streamlit
-st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan</h2>", unsafe_allow_html=True)
 st.pyplot(plt)
