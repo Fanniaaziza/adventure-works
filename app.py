@@ -79,7 +79,7 @@ GROUP BY Country
 
 # Eksekusi query dan ambil data
 cursor = conn.cursor()
-cursor.execute(query_bubble)
+cursor.execute(query)
 data_bubble = cursor.fetchall()
 cursor.close()
 conn.close()
