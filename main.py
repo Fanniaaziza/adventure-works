@@ -4,6 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
+# Membuat engine SQLAlchemy untuk koneksi ke MySQL
+engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+
 # Membuat koneksi ke database MySQL
 conn = pymysql.connect(
     host="kubela.id",
