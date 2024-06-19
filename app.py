@@ -4,11 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
-# Membuat engine SQLAlchemy untuk koneksi ke MySQL
-engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
-
 # Membuat koneksi ke database MySQL
-conn = mysql.connect(
+conn = mysql.connector.connect(
     host="kubela.id",
     port=3306,
     user="davis2024irwan",
@@ -16,9 +13,15 @@ conn = mysql.connect(
     database="aw"
 )
 
+# Membuat engine SQLAlchemy untuk koneksi ke MySQL
+engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+
 # Cek koneksi berhasil
 if conn:
     print('Connected to MySQL database')
+
+# Membuat cursor
+#cursor = connection.cursor()
 
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
@@ -29,21 +32,25 @@ query = """
     ORDER BY CalendarYear
 """
 
-# Eksekusi query dan ambil data
-cursor = conn.cursor()
-cursor.execute(query)
-data = cursor.fetchall()
-cursor.close()
+# Eksekusi query
+#cursor.execute(query)
+#data = cursor.fetchall()
+
+# Menutup cursor dan koneksi database
+#cursor.close()
+#connection.close()
+
+# Menjalankan query dan membuat DataFrame dari hasilnya
+df_sales = pd.read_sql(query, conn)
+
+# Menutup koneksi setelah selesai digunakan
 conn.close()
-
-# Menampilkan judul dashboard
-st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
-
-# Membuat DataFrame dari hasil query
-df_sales = pd.DataFrame(data, columns=['Year', 'TotalSales'])
 
 # Konversi kolom 'Year' ke tipe data integer
 df_sales['Year'] = df_sales['Year'].astype(int)
+
+# Menampilkan judul dashboard
+st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
 # Menampilkan DataFrame di Streamlit dalam bentuk tabel
 st.subheader('1. Data Penjualan Tahunan')
@@ -67,5 +74,5 @@ plt.ylabel('Total Penjualan', fontsize=14)
 plt.grid(True)
 
 # Menampilkan plot di Streamlit
-st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan</h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
 st.pyplot(plt)
