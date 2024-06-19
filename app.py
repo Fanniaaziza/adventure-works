@@ -20,8 +20,12 @@ conn = pymysql.connect(
 if conn:
     print('Connected to MySQL database')
 
-# Membuat cursor
-#cursor = connection.cursor()
+# Eksekusi query dan ambil data
+cursor = conn.cursor()
+cursor.execute(query)
+data = cursor.fetchall()
+cursor.close()
+conn.close()
 
 # Query SQL untuk mengambil data penjualan per tahun
 query = """
@@ -31,14 +35,6 @@ query = """
     GROUP BY CalendarYear
     ORDER BY CalendarYear
 """
-
-# Eksekusi query
-cursor.execute(query)
-data = cursor.fetchall()
-
-# Menutup cursor dan koneksi database
-#cursor.close()
-#connection.close()
 
 # Menampilkan judul dashboard
 st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
