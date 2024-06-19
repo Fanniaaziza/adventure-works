@@ -110,7 +110,7 @@ GROUP BY
 '''
 
 # Jalankan query dan simpan hasilnya ke dalam DataFrame
-df_sales_by_region = pd.read_sql(query, engine)
+df_sales_by_region = pd.read_sql(query, conn)
 
 # Buat visualisasi proporsi penjualan per wilayah atau region
 plt.figure(figsize=(10, 6))
