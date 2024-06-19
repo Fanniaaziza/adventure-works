@@ -29,7 +29,7 @@ GROUP BY Country
 '''
 
 # Membuat DataFrame dari hasil query
-df_bubble = pd.read_sql(query, engine)
+df_bubble = pd.read_sql(query, conn)
 
 # Tambahkan argumen s untuk ukuran bubble
 plt.figure(figsize=(14, 12))
