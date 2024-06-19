@@ -14,7 +14,7 @@ conn = mysql.connector.connect(
 )
 
 # Membuat engine SQLAlchemy untuk koneksi ke MySQL
-engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
+#engine = create_engine("mysql+pymysql://davis2024irwan:wh451n9m@ch1n3@kubela.id:3306/aw")
 
 # Cek koneksi berhasil
 if conn:
