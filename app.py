@@ -67,23 +67,17 @@ if option == 'IMDB Top Movies':
     st.pyplot(plt)
 
     # Visualisasi Line Histogram Persebaran judul film dengan rate film
-    #st.subheader('Line Histogram Persebaran Umur Penonton')
-    #plt.figure(figsize=(12, 6))
-    #df_imdb['Age'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
-    #plt.xlabel('Kategori Umur')
-    #plt.ylabel('Jumlah Penonton')
-    #plt.title('Persebaran Umur Penonton')
-    #plt.grid(True)
-    #st.pyplot(plt)
+    st.subheader('Line Histogram Persebaran Rating Film')
+    plt.figure(figsize=(12, 6))
+    df_imdb['Rate'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
+    plt.xlabel('Rating')
+    plt.ylabel('Judul Film')
+    plt.title('Persebaran Rating film')
+    plt.grid(True)
+    st.pyplot(plt)
 
-    # Visualisasi Bubble chart Judul Film dengan Weekend Gross
+        # Visualisasi Bubble chart Judul Film dengan Weekend Gross
     st.subheader('Bubble chart Judul Film dengan Weekend Gross')
-
-    # Grupkan data berdasarkan judul film dan rating
-    grouped_df = df_imdb.groupby('Weekend Gross')['Judul'].first().reset_index()
-    
-    # Visualisasi Bubble Plot Judul Film dengan Weekend Gross
-    st.subheader('Bubble Plot Judul Film dengan Weekend Gross')
     plt.figure(figsize=(12, 8))
     plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
     plt.xlabel('Judul Film')
