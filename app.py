@@ -18,8 +18,6 @@ st.dataframe(df_imdb)
 expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # Kolom yang diharapkan
 if set(expected_columns).issubset(df_imdb.columns):
     # 1. Visualisasi Perbandingan: Jumlah Film per Tahun
-    st.subheader("Perbandingan Jumlah Film per Tahun")
-
     year_counts = df_imdb['tahun'].value_counts().sort_index()
 
     plt.figure(figsize=(10, 6))
@@ -31,39 +29,32 @@ if set(expected_columns).issubset(df_imdb.columns):
     plt.grid(True)
     st.pyplot(plt)
 
-    st.markdown("""
-    Visualisasi ini menunjukkan bagaimana jumlah film berubah dari tahun ke tahun berdasarkan dataset IMDB-TOP.csv. Grafik batang
-    menampilkan tahun di sumbu x dan jumlah film di sumbu y. Dari visualisasi ini, dapat dilihat pola perubahan jumlah film dari tahun ke tahun.
-    """)
+    # 2. Visualisasi Hubungan: Scatter Plot Durasi Film vs Rate
+    plt.figure(figsize=(10, 6))
+    plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
+    plt.title('Hubungan Antara Durasi Film dan Rate')
+    plt.xlabel('Durasi Film (Menit)')
+    plt.ylabel('Rate')
+    plt.grid(True)
+    st.pyplot(plt)
 
-    # 2. Visualisasi Hubungan: Bubble Chart Durasi Film vs Rate
-    st.subheader("Hubungan Antara Durasi Film dan Rate (Bubble Chart)")
+    # 3. Visualisasi Distribusi: Histogram Distribusi Durasi Film
+    plt.figure(figsize=(10, 6))
+    plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
+    plt.title('Distribusi Durasi Film')
+    plt.xlabel('Durasi Film (Menit)')
+    plt.ylabel('Frekuensi')
+    plt.grid(True)
+    st.pyplot(plt)
 
-    # Preprocessing rate column
-    df_imdb['rate'] = pd.to_numeric(df_imdb['rate'], errors='coerce')  # Convert to numeric, coerce errors to NaN
+    # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
+    age_counts = df_imdb['age'].value_counts()
 
-    # Normalize rate values for marker size
-    min_rate = df_imdb['rate'].min()
-    max_rate = df_imdb['rate'].max()
-    normalized_sizes = 1000 * (df_imdb['rate'] - min_rate) / (max_rate - min_rate)  # Scale to 1000 for marker sizes
-
-    # Check for NaN values in durasi or rate
-    if df_imdb[['durasi', 'rate']].isnull().any().any():
-        st.error("Ada nilai NaN dalam kolom 'durasi' atau 'rate'. Periksa dan perbaiki data sebelum melanjutkan.")
-    else:
-        plt.figure(figsize=(10, 6))
-        plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=normalized_sizes, alpha=0.5, color='orange')
-        plt.title('Hubungan Antara Durasi Film dan Rate')
-        plt.xlabel('Durasi Film (Menit)')
-        plt.ylabel('Rate')
-        plt.grid(True)
-        st.pyplot(plt)
-
-        st.markdown("""
-        Bubble chart ini memvisualisasikan hubungan antara durasi film (di sumbu x) dan rating IMDb (di sumbu y). 
-        Ukuran bubble menunjukkan rating IMDb untuk setiap data film dalam dataset, di mana semakin besar bubble, semakin tinggi ratingnya.
-        Titik-titik tersebar menunjukkan distribusi durasi film dan rating IMDb untuk setiap data film dalam dataset.
-        """)
+    plt.figure(figsize=(8, 8))
+    plt.pie(age_counts, labels=age_counts.index, autopct='%1.1f%%', startangle=140)
+    plt.title('Komposisi Film Berdasarkan Age Rating')
+    plt.axis('equal')
+    st.pyplot(plt)
 
 else:
     st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
