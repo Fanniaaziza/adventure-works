@@ -15,9 +15,10 @@ st.markdown("<h2 style='text-align: center; color: black;'>Data Film IMDB</h2>",
 st.dataframe(df_imdb)
 
 # Check if necessary columns exist
-if {'Title', 'Year', 'Duration', 'Age', 'Rate'}.issubset(df_imdb.columns):
+expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # Kolom yang diharapkan
+if set(expected_columns).issubset(df_imdb.columns):
     # 1. Visualisasi Perbandingan: Jumlah Film per Tahun
-    year_counts = df_imdb['Year'].value_counts().sort_index()
+    year_counts = df_imdb['tahun'].value_counts().sort_index()
 
     plt.figure(figsize=(10, 6))
     plt.bar(year_counts.index.astype(str), year_counts.values, color='skyblue')
@@ -30,7 +31,7 @@ if {'Title', 'Year', 'Duration', 'Age', 'Rate'}.issubset(df_imdb.columns):
 
     # 2. Visualisasi Hubungan: Scatter Plot Durasi Film vs Rate
     plt.figure(figsize=(10, 6))
-    plt.scatter(df_imdb['Duration'], df_imdb['Rate'], alpha=0.5, color='orange')
+    plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
     plt.title('Hubungan Antara Durasi Film dan Rate')
     plt.xlabel('Durasi Film (Menit)')
     plt.ylabel('Rate')
@@ -39,7 +40,7 @@ if {'Title', 'Year', 'Duration', 'Age', 'Rate'}.issubset(df_imdb.columns):
 
     # 3. Visualisasi Distribusi: Histogram Distribusi Durasi Film
     plt.figure(figsize=(10, 6))
-    plt.hist(df_imdb['Duration'], bins=20, color='green', edgecolor='black')
+    plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
     plt.title('Distribusi Durasi Film')
     plt.xlabel('Durasi Film (Menit)')
     plt.ylabel('Frekuensi')
@@ -47,7 +48,7 @@ if {'Title', 'Year', 'Duration', 'Age', 'Rate'}.issubset(df_imdb.columns):
     st.pyplot(plt)
 
     # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
-    age_counts = df_imdb['Age'].value_counts()
+    age_counts = df_imdb['age'].value_counts()
 
     plt.figure(figsize=(8, 8))
     plt.pie(age_counts, labels=age_counts.index, autopct='%1.1f%%', startangle=140)
@@ -56,4 +57,4 @@ if {'Title', 'Year', 'Duration', 'Age', 'Rate'}.issubset(df_imdb.columns):
     st.pyplot(plt)
 
 else:
-    st.write("Kolom yang diperlukan (Title, Year, Duration, Age, Rate) tidak lengkap dalam dataset.")
+    st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
