@@ -22,7 +22,7 @@ def load_adventure_works_data():
         ORDER BY CalendarYear
     """
     df_sales = pd.read_sql(query_sales, conn)
-
+    
     # Ensure Year column is of integer type
     df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
     
@@ -295,3 +295,10 @@ else:
 
     # Close connection after usage
     conn.close()
+
+st.markdown("""
+        Nama : Fannia Nur Aziza
+        NPM : 21082010170
+        Mata Kuliah : Data Visualisasi
+        Paralel : B
+    """)
