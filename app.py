@@ -29,6 +29,11 @@ if set(expected_columns).issubset(df_imdb.columns):
     plt.grid(True)
     st.pyplot(plt)
 
+    st.markdown("""
+    Visualisasi ini menggunakan grafik batang untuk menunjukkan bagaimana jumlah film berubah dari tahun ke tahun dalam dataset IMDB-TOP.csv. 
+    Grafik ini memberikan gambaran tentang seberapa aktifnya industri film dalam periode waktu yang dianalisis.
+    """)
+    
     # 2. Visualisasi Hubungan: Scatter Plot Durasi Film vs Rate
     plt.figure(figsize=(10, 6))
     plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
@@ -38,6 +43,12 @@ if set(expected_columns).issubset(df_imdb.columns):
     plt.grid(True)
     st.pyplot(plt)
 
+    st.markdown("""
+    Scatter plot ini memvisualisasikan hubungan antara durasi film (sumbu x) dan rating IMDb (sumbu y). 
+    Setiap titik merepresentasikan satu film dalam dataset. Pada plot ini, kita dapat melihat pola atau tren umum antara durasi film dengan rating IMDb, 
+    meskipun tidak terlalu jelas dalam 10 data pertama yang ditampilkan.
+    """)
+        
     # 3. Visualisasi Distribusi: Histogram Distribusi Durasi Film
     plt.figure(figsize=(10, 6))
     plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
@@ -47,6 +58,12 @@ if set(expected_columns).issubset(df_imdb.columns):
     plt.grid(True)
     st.pyplot(plt)
 
+    st.markdown("""
+    Histogram ini menunjukkan distribusi frekuensi durasi film dalam dataset. 
+    Dengan membagi durasi film ke dalam beberapa bin, plot ini memberikan gambaran visual tentang sebaran durasi film yang ada. 
+    Warna hijau digunakan untuk menyoroti distribusi ini, sementara garis tepi hitam menambahkan detail visual.
+    """)
+        
     # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
     age_counts = df_imdb['age'].value_counts()
 
@@ -55,6 +72,12 @@ if set(expected_columns).issubset(df_imdb.columns):
     plt.title('Komposisi Film Berdasarkan Age Rating')
     plt.axis('equal')
     st.pyplot(plt)
+
+    st.markdown("""
+    Pie chart ini memvisualisasikan komposisi jumlah film berdasarkan rating usia (Age Rating) dalam dataset. 
+    Setiap sektor dalam pie chart mewakili persentase dari jumlah total film dalam kategori rating usia yang berbeda. 
+    Chart ini membantu kita melihat seberapa beragam usia target penonton untuk film-film dalam dataset.
+    """)
 
 else:
     st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
