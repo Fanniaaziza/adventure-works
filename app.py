@@ -47,53 +47,23 @@ if set(expected_columns).issubset(df_imdb.columns):
     max_rate = df_imdb['rate'].max()
     normalized_sizes = 1000 * (df_imdb['rate'] - min_rate) / (max_rate - min_rate)  # Scale to 1000 for marker sizes
 
-    plt.figure(figsize=(10, 6))
-    plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=normalized_sizes, alpha=0.5, color='orange')
-    plt.title('Hubungan Antara Durasi Film dan Rate')
-    plt.xlabel('Durasi Film (Menit)')
-    plt.ylabel('Rate')
-    plt.grid(True)
-    st.pyplot(plt)
+    # Check for NaN values in durasi or rate
+    if df_imdb[['durasi', 'rate']].isnull().any().any():
+        st.error("Ada nilai NaN dalam kolom 'durasi' atau 'rate'. Periksa dan perbaiki data sebelum melanjutkan.")
+    else:
+        plt.figure(figsize=(10, 6))
+        plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=normalized_sizes, alpha=0.5, color='orange')
+        plt.title('Hubungan Antara Durasi Film dan Rate')
+        plt.xlabel('Durasi Film (Menit)')
+        plt.ylabel('Rate')
+        plt.grid(True)
+        st.pyplot(plt)
 
-    st.markdown("""
-    Bubble chart ini memvisualisasikan hubungan antara durasi film (di sumbu x) dan rating IMDb (di sumbu y). 
-    Ukuran bubble menunjukkan rating IMDb untuk setiap data film dalam dataset, di mana semakin besar bubble, semakin tinggi ratingnya.
-    Titik-titik tersebar menunjukkan distribusi durasi film dan rating IMDb untuk setiap data film dalam dataset.
-    """)
-
-    # 3. Visualisasi Distribusi: Scatter Plot Distribusi Durasi Film
-    st.subheader("Distribusi Durasi Film (Scatter Plot)")
-
-    # Plot scatter plot untuk distribusi durasi film
-    plt.figure(figsize=(10, 6))
-    plt.scatter(df_imdb.index, df_imdb['durasi'], alpha=0.7, color='green')
-    plt.title('Distribusi Durasi Film')
-    plt.xlabel('Indeks Data Film')
-    plt.ylabel('Durasi Film (Menit)')
-    plt.grid(True)
-    st.pyplot(plt)
-
-    st.markdown("""
-    Scatter plot ini memvisualisasikan distribusi durasi film dari dataset IMDB-TOP.csv. Setiap titik menunjukkan durasi film
-    dari satu data film dalam dataset, di mana posisi titik pada sumbu x merepresentasikan indeks data film dan posisi titik pada
-    sumbu y merepresentasikan durasi film dalam menit.
-    """)
-
-    # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
-    st.subheader("Komposisi Film Berdasarkan Age Rating")
-
-    age_counts = df_imdb['age'].value_counts()
-
-    plt.figure(figsize=(8, 8))
-    plt.pie(age_counts, labels=age_counts.index, autopct='%1.1f%%', startangle=140)
-    plt.title('Komposisi Film Berdasarkan Age Rating')
-    plt.axis('equal')
-    st.pyplot(plt)
-
-    st.markdown("""
-    Pie chart ini memvisualisasikan komposisi jumlah film berdasarkan rating usia (Age Rating). 
-    Setiap sektor dalam pie chart menunjukkan persentase jumlah film dalam kategori rating usia yang berbeda.
-    """)
+        st.markdown("""
+        Bubble chart ini memvisualisasikan hubungan antara durasi film (di sumbu x) dan rating IMDb (di sumbu y). 
+        Ukuran bubble menunjukkan rating IMDb untuk setiap data film dalam dataset, di mana semakin besar bubble, semakin tinggi ratingnya.
+        Titik-titik tersebar menunjukkan distribusi durasi film dan rating IMDb untuk setiap data film dalam dataset.
+        """)
 
 else:
     st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
