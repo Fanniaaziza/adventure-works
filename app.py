@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 # Fungsi untuk memuat data IMDB
 def load_imdb_data():
     fn1 = 'IMDB-TOP.csv'
-    return pd.read_csv(fn1, encoding='latin1')
+    return pd.read_csv(fn1, encoding='latin1').head(10)  # Menggunakan hanya 10 data pertama
 
-# Memuat data IMDB
+# Memuat data IMDB (hanya 10 data pertama)
 df_imdb = load_imdb_data()
 
 # Menampilkan judul dan deskripsi aplikasi Streamlit
