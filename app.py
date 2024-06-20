@@ -152,6 +152,11 @@ else:
             # Display plot in Streamlit
             st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
             st.pyplot(plt)
+
+            st.markdown("""
+            Dari visualisasi di atas dapat dilihat adanya kenaikan penjualan tertinggi di tahun 2003 dan penjualan yang menurun di tahun 2004.
+            """)
+            
         except Exception as e:
             st.error(f"Terjadi kesalahan: {e}")
     else:
@@ -204,6 +209,11 @@ else:
     st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
+    st.markdown("""
+        Dari visualisasi di atas dapat dilihat adanya hubungan antara jumlah penjualan dengan region penjualan, region yang memiliki 
+        daerah yang luas dan lebih besar cenderung menghasilkan penjualan produk yang besar pula.
+    """)
+
     # Query data for pie chart
     query_pie = '''
     SELECT
@@ -232,6 +242,11 @@ else:
     # Display plot in Streamlit
     st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
+
+    st.markdown("""
+        Dari visualisasi di atas dapat dilihat prosentase penjualan produk dari berbagai region Australia dan southwest memiliki 
+        prosentase penjualan tertinggi.
+    """)
 
     # Query data for bar chart
     query_bar = '''
@@ -273,6 +288,10 @@ else:
     # Display plot in Streamlit
     st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
     st.pyplot(fig)
+
+    st.markdown("""
+        Dari visualisasi di atas dapat dilihat distribusi penjualan berdasarkan dari jenis produknya, penjualan terbesar berasal dari produk sepeda.
+    """)
 
     # Close connection after usage
     conn.close()
