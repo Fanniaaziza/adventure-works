@@ -297,7 +297,7 @@ else:
     conn.close()
 
 # Menampilkan informasi data diri
-st.markdown("""<p style='text-align: left; color: black; font-size: 12px;'>Nama : Fannia Nur Aziza<br>
+st.markdown("""<p style='text-align: left; color: black; font-size: 14px;'>Nama : Fannia Nur Aziza<br>
                 NPM : 21082010170<br>
                 Mata Kuliah : Data Visualisasi<br>
                 Paralel : B</p>""", unsafe_allow_html=True)
