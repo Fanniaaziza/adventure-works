@@ -296,9 +296,9 @@ else:
     # Close connection after usage
     conn.close()
 
-st.markdown("""
-        Nama : Fannia Nur Aziza
-        NPM : 21082010170
-        Mata Kuliah : Data Visualisasi
-        Paralel : B
-    """)
+# Menampilkan informasi Nama dan NPM di pojok kiri bawah
+st.markdown("""<p style='text-align: left; color: black;'>Nama : Fannia Nur Aziza<br>NPM : 21082010170</p>""", unsafe_allow_html=True)
+
+# Menampilkan informasi tambahan mengenai kuliah dan paralel
+st.markdown("<h3 style='text-align: left; color: black;'>Kuliah : Data Visualisasi</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: left; color: black;'>Paralel : B</h3>", unsafe_allow_html=True)
