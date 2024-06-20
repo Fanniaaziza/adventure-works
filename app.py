@@ -34,74 +34,61 @@ def load_imdb_data():
     fn1 = 'imdb.csv'
     return pd.read_csv(fn1, encoding='latin1')
 
-# Load Adventure Works data
-df_sales = load_adventure_works_data()
+# Load IMDB data
+df_imdb = load_imdb_data()
 
-# Menampilkan judul di halaman web
-st.title("Final Project Mata Kuliah Data Visualisasi")
+# Convert Weekend Gross and Total Gross to numeric, handling errors
+df_imdb['Weekend Gross'] = pd.to_numeric(df_imdb['Weekend Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
+df_imdb['Total Gross'] = pd.to_numeric(df_imdb['Total Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
 
-# Menambahkan sidebar
-option = st.sidebar.selectbox(
-    'Pilih data yang ingin ditampilkan:',
-    ('IMDB Top Movies', 'Adventure Works')
-)
+# Comparison: Bar Chart Rating untuk Setiap Judul Film
+st.subheader('Bar Chart Rating untuk Setiap Judul Film')
 
-if option == 'IMDB Top Movies':
-    df_imdb = load_imdb_data()
-    st.title("Scraping Website IMDB")
-    st.write(df_imdb)
+# Grupkan data berdasarkan judul film dan rating
+grouped_df = df_imdb.groupby('Rate')['Judul'].first().reset_index()
 
-      # Convert Weekend Gross and Total Gross to numeric, handling errors
-    df_imdb['Weekend Gross'] = pd.to_numeric(df_imdb['Weekend Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
-    df_imdb['Total Gross'] = pd.to_numeric(df_imdb['Total Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
+# Plot bar chart dengan sumbu judul di y dan rating di x
+plt.figure(figsize=(12, 8))
+plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
+plt.xlabel('Rating')
+plt.ylabel('Judul Film')
+plt.title('Bar Chart Rating untuk Setiap Judul Film')
+plt.grid(True)
+st.pyplot(plt)
 
-    # Visualisasi Bar Chart Rating untuk Setiap Judul Film
-    st.subheader('Bar Chart Rating untuk Setiap Judul Film')
+# Relationship: Bubble chart Judul Film dengan Weekend Gross
+st.subheader('Bubble chart Judul Film dengan Weekend Gross')
+plt.figure(figsize=(12, 8))
+plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
+plt.xlabel('Judul Film')
+plt.ylabel('Weekend Gross')
+plt.title('Bubble Plot Judul Film dengan Weekend Gross')
+plt.xticks(rotation=90)
+plt.grid(True)
+st.pyplot(plt)
 
-    # Grupkan data berdasarkan judul film dan rating
-    grouped_df = df_imdb.groupby('Rate')['Judul'].first().reset_index()
+# Distribution: Histogram Persebaran Rating Film
+st.subheader('Histogram Persebaran Rating Film')
+plt.figure(figsize=(12, 6))
+df_imdb['Rate'].plot(kind='hist', bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Rating')
+plt.ylabel('Jumlah Film')
+plt.title('Persebaran Rating Film')
+plt.grid(True)
+st.pyplot(plt)
+ 
+# Composition: Donut Chart Rate Film dengan Total Gross
+st.subheader('Donut Chart Rate Film dengan Total Gross')
+df_rate_gross = df_imdb.groupby('Rate')['Total Gross'].sum()
+plt.figure(figsize=(8, 8))
+plt.pie(df_rate_gross, labels=df_rate_gross.index, autopct='%1.1f%%', startangle=140, pctdistance=0.85)
+centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+fig = plt.gcf()
+fig.gca().add_artist(centre_circle)
+plt.title('Donut Chart Rate Film dengan Total Gross')
+plt.axis('equal')
+st.pyplot(plt)
 
-    # Plot bar chart dengan sumbu judul di y dan rating di x
-    plt.figure(figsize=(12, 8))
-    plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
-    plt.xlabel('Rating')
-    plt.ylabel('Judul Film')
-    plt.title('Bar Chart Rating untuk Setiap Judul Film')
-    plt.grid(True)
-    st.pyplot(plt)
-
-    # Visualisasi Line Histogram Persebaran Rating Film
-    st.subheader('Line Histogram Persebaran Rating Film')
-    plt.figure(figsize=(12, 6))
-    df_imdb['Rate'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
-    plt.xlabel('Rating')
-    plt.ylabel('Jumlah Film')
-    plt.title('Persebaran Rating Film')
-    plt.grid(True)
-    st.pyplot(plt)
-
-    # Visualisasi Bubble chart Judul Film dengan Weekend Gross
-    st.subheader('Bubble chart Judul Film dengan Weekend Gross')
-    plt.figure(figsize=(12, 8))
-    plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
-    plt.xlabel('Judul Film')
-    plt.ylabel('Weekend Gross')
-    plt.title('Bubble Plot Judul Film dengan Weekend Gross')
-    plt.xticks(rotation=90)
-    plt.grid(True)
-    st.pyplot(plt)
-
-    # Visualisasi Donut Chart Rate Film dengan Total Gross
-    st.subheader('Donut Chart Rate Film dengan Total Gross')
-    df_rate_gross = df_imdb.groupby('Rate')['Total Gross'].sum()
-    plt.figure(figsize=(8, 8))
-    plt.pie(df_rate_gross, labels=df_rate_gross.index, autopct='%1.1f%%', startangle=140, pctdistance=0.85)
-    centre_circle = plt.Circle((0, 0), 0.70, fc='white')
-    fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
-    plt.title('Donut Chart Rate Film dengan Total Gross')
-    plt.axis('equal')
-    st.pyplot(plt)
 else:
     st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
