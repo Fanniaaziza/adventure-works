@@ -40,6 +40,19 @@ df_sales = load_adventure_works_data(conn)
 # Memuat data IMDB
 df_imdb = load_imdb_data()
 
+# Menghitung rata-rata peringkat IMDb untuk setiap genre
+avg_rating_genre = df_imdb.groupby('Genre')['IMDB Rating'].mean().sort_values(ascending=False)
+
+# Plot bar untuk perbandingan rata-rata peringkat IMDb antara genre
+plt.figure(figsize=(10, 6))
+avg_rating_genre.plot(kind='bar', color='skyblue')
+plt.title('Perbandingan Rata-Rata Peringkat IMDb antara Genre Film')
+plt.xlabel('Genre')
+plt.ylabel('Rata-Rata Peringkat IMDb')
+plt.xticks(rotation=45)
+plt.grid(True)
+st.pyplot(plt)
+
 # Menampilkan judul dan deskripsi aplikasi Streamlit
 st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works & IMDB</h1>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; color: black;'>Data Penjualan & Data Film IMDB</h2>", unsafe_allow_html=True)
