@@ -55,18 +55,14 @@ if set(expected_columns).issubset(df_imdb.columns):
     # 3. Visualisasi Distribusi: Histogram Distribusi Durasi Film
     st.subheader("Distribusi Durasi Film")
 
+    # Plot line histogram untuk distribusi durasi film
     plt.figure(figsize=(10, 6))
-    plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
+    plt.hist(df_imdb_subset['Duration'], bins=10, color='green', edgecolor='black', linewidth=1.2, alpha=0.7)
     plt.title('Distribusi Durasi Film')
     plt.xlabel('Durasi Film (Menit)')
     plt.ylabel('Frekuensi')
     plt.grid(True)
-    st.pyplot(plt)
-
-    st.markdown("""
-    Histogram ini menunjukkan distribusi frekuensi durasi film dalam dataset IMDB-TOP.csv. 
-    Sumbersi film (dalam menit) dikelompokkan ke dalam bin, dengan tinggi batang menunjukkan jumlah film dalam bin tersebut.
-    """)
+    plt.show()
 
     # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
     st.subheader("Komposisi Film Berdasarkan Age Rating")
