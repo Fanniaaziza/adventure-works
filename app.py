@@ -297,8 +297,7 @@ else:
     conn.close()
 
 # Menampilkan informasi Nama dan NPM di pojok kiri bawah
-st.markdown("""<p style='text-align: left; color: black;'>Nama : Fannia Nur Aziza<br>NPM : 21082010170</p>""", unsafe_allow_html=True)
-
-# Menampilkan informasi tambahan mengenai kuliah dan paralel
-st.markdown("<h3 style='text-align: left; color: black;'>Kuliah : Data Visualisasi</h3>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: left; color: black;'>Paralel : B</h3>", unsafe_allow_html=True)
+st.markdown("""<p style='text-align: left; color: black;'>Nama : Fannia Nur Aziza
+                <br>NPM : 21082010170
+                <br>Mata Kuliah : Data Visualisasi
+                <br>Paralel : B</p>""", unsafe_allow_html=True)
