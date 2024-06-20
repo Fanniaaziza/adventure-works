@@ -39,8 +39,16 @@ if set(expected_columns).issubset(df_imdb.columns):
     # 2. Visualisasi Hubungan: Bubble Chart Durasi Film vs Rate
     st.subheader("Hubungan Antara Durasi Film dan Rate (Bubble Chart)")
 
+    # Preprocessing rate column
+    df_imdb['rate'] = pd.to_numeric(df_imdb['rate'], errors='coerce')  # Convert to numeric, coerce errors to NaN
+
+    # Normalize rate values for marker size
+    min_rate = df_imdb['rate'].min()
+    max_rate = df_imdb['rate'].max()
+    normalized_sizes = 1000 * (df_imdb['rate'] - min_rate) / (max_rate - min_rate)  # Scale to 1000 for marker sizes
+
     plt.figure(figsize=(10, 6))
-    plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=df_imdb['rate']*10, alpha=0.5, color='orange')
+    plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=normalized_sizes, alpha=0.5, color='orange')
     plt.title('Hubungan Antara Durasi Film dan Rate')
     plt.xlabel('Durasi Film (Menit)')
     plt.ylabel('Rate')
