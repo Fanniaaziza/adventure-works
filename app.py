@@ -34,96 +34,97 @@ def load_imdb_data():
     fn1 = 'imdb.csv'
     return pd.read_csv(fn1, encoding='latin1')
 
-# Load IMDB data
+# Memuat data Adventure Works
+df_sales = load_adventure_works_data()
+
+# Memuat data IMDB
 df_imdb = load_imdb_data()
 
 # Convert Weekend Gross and Total Gross to numeric, handling errors
 df_imdb['Weekend Gross'] = pd.to_numeric(df_imdb['Weekend Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
 df_imdb['Total Gross'] = pd.to_numeric(df_imdb['Total Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
 
-# Comparison: Bar Chart Rating untuk Setiap Judul Film
-st.subheader('Bar Chart Rating untuk Setiap Judul Film')
+# Menampilkan judul dan deskripsi aplikasi Streamlit
+st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works & IMDB</h1>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: black;'>Data Penjualan & Data Film IMDB</h2>", unsafe_allow_html=True)
 
-# Grupkan data berdasarkan judul film dan rating
-grouped_df = df_imdb.groupby('Rate')['Judul'].first().reset_index()
+# Menu dropdown untuk memilih data yang akan ditampilkan
+data_choice = st.selectbox("Pilih Data:", ("Data Penjualan Adventure Works", "Data Film IMDB"))
 
-# Plot bar chart dengan sumbu judul di y dan rating di x
-plt.figure(figsize=(12, 8))
-plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
-plt.xlabel('Rating')
-plt.ylabel('Judul Film')
-plt.title('Bar Chart Rating untuk Setiap Judul Film')
-plt.grid(True)
-st.pyplot(plt)
+if data_choice == "Data Film IMDB":
+    st.subheader('Data Film IMDB')
+    st.dataframe(df_imdb)
+    
+    # Comparison: Bar Chart Rating untuk Setiap Judul Film
+    st.subheader('Bar Chart Rating untuk Setiap Judul Film')
+    
+    # Grupkan data berdasarkan judul film dan rating
+    grouped_df = df_imdb.groupby('Rate')['Judul'].first().reset_index()
 
-# Relationship: Bubble chart Judul Film dengan Weekend Gross
-st.subheader('Bubble chart Judul Film dengan Weekend Gross')
-plt.figure(figsize=(12, 8))
-plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
-plt.xlabel('Judul Film')
-plt.ylabel('Weekend Gross')
-plt.title('Bubble Plot Judul Film dengan Weekend Gross')
-plt.xticks(rotation=90)
-plt.grid(True)
-st.pyplot(plt)
+    # Plot bar chart dengan sumbu judul di y dan rating di x
+    plt.figure(figsize=(12, 8))
+    plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')
+    plt.xlabel('Rating')
+    plt.ylabel('Judul Film')
+    plt.title('Bar Chart Rating untuk Setiap Judul Film')
+    plt.grid(True)
+    st.pyplot(plt)
 
-# Distribution: Histogram Persebaran Rating Film
-st.subheader('Histogram Persebaran Rating Film')
-plt.figure(figsize=(12, 6))
-df_imdb['Rate'].plot(kind='hist', bins=20, color='skyblue', edgecolor='black')
-plt.xlabel('Rating')
-plt.ylabel('Jumlah Film')
-plt.title('Persebaran Rating Film')
-plt.grid(True)
-st.pyplot(plt)
- 
-# Composition: Donut Chart Rate Film dengan Total Gross
-st.subheader('Donut Chart Rate Film dengan Total Gross')
-df_rate_gross = df_imdb.groupby('Rate')['Total Gross'].sum()
-plt.figure(figsize=(8, 8))
-plt.pie(df_rate_gross, labels=df_rate_gross.index, autopct='%1.1f%%', startangle=140, pctdistance=0.85)
-centre_circle = plt.Circle((0, 0), 0.70, fc='white')
-fig = plt.gcf()
-fig.gca().add_artist(centre_circle)
-plt.title('Donut Chart Rate Film dengan Total Gross')
-plt.axis('equal')
-st.pyplot(plt)
+    # Relationship: Bubble chart Judul Film dengan Weekend Gross
+    st.subheader('Bubble chart Judul Film dengan Weekend Gross')
+    plt.figure(figsize=(12, 8))
+    plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
+    plt.xlabel('Judul Film')
+    plt.ylabel('Weekend Gross')
+    plt.title('Bubble Plot Judul Film dengan Weekend Gross')
+    plt.xticks(rotation=90)
+    plt.grid(True)
+    st.pyplot(plt)
 
-else:
-    st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
+    # Distribution: Histogram Persebaran Rating Film
+    st.subheader('Histogram Persebaran Rating Film')
+    plt.figure(figsize=(12, 6))
+    df_imdb['Rate'].plot(kind='hist', bins=20, color='skyblue', edgecolor='black')
+    plt.xlabel('Rating')
+    plt.ylabel('Jumlah Film')
+    plt.title('Persebaran Rating Film')
+    plt.grid(True)
+    st.pyplot(plt)
+    
+    # Composition: Donut Chart Rate Film dengan Total Gross
+    st.subheader('Donut Chart Rate Film dengan Total Gross')
+    df_rate_gross = df_imdb.groupby('Rate')['Total Gross'].sum()
+    plt.figure(figsize=(8, 8))
+    plt.pie(df_rate_gross, labels=df_rate_gross.index, autopct='%1.1f%%', startangle=140, pctdistance=0.85)
+    centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    plt.title('Donut Chart Rate Film dengan Total Gross')
+    plt.axis('equal')
+    st.pyplot(plt)
 
-    # Menampilkan DataFrame di Streamlit dalam bentuk tabel
-    st.subheader('1. Data Penjualan Tahunan')
+elif data_choice == "Data Penjualan Adventure Works":
+    st.subheader('Data Penjualan Adventure Works')
     st.dataframe(df_sales)
 
-    # Check if the DataFrame is not empty
-    if not df_sales.empty:
-        try:
-            # Ensure Year column is of integer type
-            df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
-            tahun_options = range(df_sales['Year'].min(), df_sales['Year'].max() + 1)
+    # Ensure Year column is of integer type
+    df_sales['Year'] = pd.to_numeric(df_sales['Year'], errors='coerce').fillna(0).astype(int)
+    tahun_options = range(df_sales['Year'].min(), df_sales['Year'].max() + 1)
 
-            # Pilihan untuk memilih rentang tahun menggunakan slider
-            year_range = st.slider('Pilih Rentang Tahun:', min_value=min(tahun_options), max_value=max(tahun_options), value=(min(tahun_options), max(tahun_options)), step=1)
+    # Pilihan untuk memilih rentang tahun menggunakan slider
+    year_range = st.slider('Pilih Rentang Tahun:', min_value=min(tahun_options), max_value=max(tahun_options), value=(min(tahun_options), max(tahun_options)), step=1)
 
-            # Filter data berdasarkan rentang tahun yang dipilih
-            df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
+    # Filter data berdasarkan rentang tahun yang dipilih
+    df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
 
-            # Plot perbandingan total penjualan per tahun dengan Matplotlib
-            plt.figure(figsize=(12, 6))
-            plt.plot(df_filtered['Year'], df_filtered['TotalSales'], marker='o', linestyle='-', color='b', linewidth=2, markersize=8)
-            plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}', fontsize=16)
-            plt.xlabel('Tahun', fontsize=14)
-            plt.ylabel('Total Penjualan', fontsize=14)
-            plt.grid(True)
-
-            # Menampilkan plot di Streamlit
-            st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
-            st.pyplot(plt)
-        except Exception as e:
-            st.error(f"Terjadi kesalahan: {e}")
-    else:
-        st.warning('Tidak ada data penjualan tersedia.')
+    # Plot perbandingan total penjualan per tahun dengan Matplotlib
+    plt.figure(figsize=(12, 6))
+    plt.plot(df_filtered['Year'], df_filtered['TotalSales'], marker='o', linestyle='-', color='b', linewidth=2, markersize=8)
+    plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}', fontsize=16)
+    plt.xlabel('Tahun', fontsize=14)
+    plt.ylabel('Total Penjualan', fontsize=14)
+    plt.grid(True)
+    st.pyplot(plt)
 
     # Query data untuk bubble plot
     query_bubble = '''
@@ -147,7 +148,7 @@ else:
     df_bubble = pd.read_sql(query_bubble, conn)
 
     # Menampilkan DataFrame di Streamlit dalam bentuk tabel
-    st.subheader('2. Hubungan Wilayah dan Penjualan')
+    st.subheader('Hubungan Wilayah dan Penjualan')
     st.dataframe(df_bubble)
 
     # Menambahkan bubble plot
@@ -167,7 +168,6 @@ else:
     plt.grid(True)
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
     # Query data untuk pie chart
@@ -186,7 +186,7 @@ else:
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
     # Menampilkan DataFrame di Streamlit dalam bentuk tabel
-    st.subheader('3. Proporsi Penjualan per Wilayah atau Region')
+    st.subheader('Proporsi Penjualan per Wilayah atau Region')
     st.dataframe(df_sales_by_region)
 
     # Buat visualisasi proporsi penjualan per wilayah atau region
@@ -196,7 +196,6 @@ else:
     plt.axis('equal')  # Membuat pie chart menjadi lingkaran
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
     st.pyplot(plt)
 
     # Query data untuk bar plot
@@ -222,7 +221,7 @@ else:
     conn.close()
 
     # Menampilkan DataFrame di Streamlit dalam bentuk tabel
-    st.subheader('4. Komposisi Penjualan per Kategori Produk')
+    st.subheader('Komposisi Penjualan per Kategori Produk')
     st.dataframe(df_bar)
 
     # Buat figure dan axes
@@ -240,5 +239,4 @@ else:
     plt.xticks(rotation=45)
 
     # Menampilkan plot di Streamlit
-    st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
     st.pyplot(fig)
