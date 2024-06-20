@@ -76,6 +76,12 @@ if option == 'IMDB Top Movies':
     #plt.grid(True)
     #st.pyplot(plt)
 
+    # Visualisasi Bubble chart Judul Film dengan Weekend Gross
+    st.subheader('Bubble chart Judul Film dengan Weekend Gross')
+
+    # Grupkan data berdasarkan judul film dan rating
+    grouped_df = df_imdb.groupby('Weekend Gross')['Judul'].first().reset_index()
+    
     # Visualisasi Bubble Plot Judul Film dengan Weekend Gross
     st.subheader('Bubble Plot Judul Film dengan Weekend Gross')
     plt.figure(figsize=(12, 8))
