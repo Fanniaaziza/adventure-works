@@ -66,24 +66,15 @@ if option == 'IMDB Top Movies':
     plt.grid(True)
     st.pyplot(plt)
 
-    # Plot bar chart dengan sumbu judul di y dan rating di x
-    plt.figure(figsize=(12, 8))
-    plt.barh(grouped_df['Judul'], grouped_df['Rate'], color='skyblue')  # Menggunakan plt.barh untuk horizontal bar chart
-    plt.xlabel('Rating')
-    plt.ylabel('Judul Film')
-    plt.title('Bar Chart Rating untuk Setiap Judul Film')
-    plt.grid(True)
-    st.pyplot(plt)
-
-    # Visualisasi Line Histogram Persebaran Umur Penonton
-    st.subheader('Line Histogram Persebaran Umur Penonton')
-    plt.figure(figsize=(12, 6))
-    df_imdb['Age'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
-    plt.xlabel('Kategori Umur')
-    plt.ylabel('Jumlah Penonton')
-    plt.title('Persebaran Umur Penonton')
-    plt.grid(True)
-    st.pyplot(plt)
+    # Visualisasi Line Histogram Persebaran judul film dengan rate film
+    #st.subheader('Line Histogram Persebaran Umur Penonton')
+    #plt.figure(figsize=(12, 6))
+    #df_imdb['Age'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
+    #plt.xlabel('Kategori Umur')
+    #plt.ylabel('Jumlah Penonton')
+    #plt.title('Persebaran Umur Penonton')
+    #plt.grid(True)
+    #st.pyplot(plt)
 
     # Visualisasi Bubble Plot Judul Film dengan Weekend Gross
     st.subheader('Bubble Plot Judul Film dengan Weekend Gross')
