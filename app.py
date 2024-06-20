@@ -36,11 +36,11 @@ if set(expected_columns).issubset(df_imdb.columns):
     menampilkan tahun di sumbu x dan jumlah film di sumbu y. Dari visualisasi ini, dapat dilihat pola perubahan jumlah film dari tahun ke tahun.
     """)
 
-    # 2. Visualisasi Hubungan: Scatter Plot Durasi Film vs Rate
-    st.subheader("Hubungan Antara Durasi Film dan Rate")
+    # 2. Visualisasi Hubungan: Bubble Chart Durasi Film vs Rate
+    st.subheader("Hubungan Antara Durasi Film dan Rate (Bubble Chart)")
 
     plt.figure(figsize=(10, 6))
-    plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
+    plt.scatter(df_imdb['durasi'], df_imdb['rate'], s=df_imdb['rate']*10, alpha=0.5, color='orange')
     plt.title('Hubungan Antara Durasi Film dan Rate')
     plt.xlabel('Durasi Film (Menit)')
     plt.ylabel('Rate')
@@ -48,25 +48,27 @@ if set(expected_columns).issubset(df_imdb.columns):
     st.pyplot(plt)
 
     st.markdown("""
-    Scatter plot ini memvisualisasikan hubungan antara durasi film (di sumbu x) dan rating IMDb (di sumbu y). 
+    Bubble chart ini memvisualisasikan hubungan antara durasi film (di sumbu x) dan rating IMDb (di sumbu y). 
+    Ukuran bubble menunjukkan rating IMDb untuk setiap data film dalam dataset, di mana semakin besar bubble, semakin tinggi ratingnya.
     Titik-titik tersebar menunjukkan distribusi durasi film dan rating IMDb untuk setiap data film dalam dataset.
     """)
 
-    # 3. Visualisasi Distribusi: Histogram Distribusi Durasi Film
-    st.subheader("Distribusi Durasi Film")
+    # 3. Visualisasi Distribusi: Scatter Plot Distribusi Durasi Film
+    st.subheader("Distribusi Durasi Film (Scatter Plot)")
 
-    # Plot line histogram untuk distribusi durasi film
+    # Plot scatter plot untuk distribusi durasi film
     plt.figure(figsize=(10, 6))
-    plt.hist(df_imdb['durasi'], bins=10, color='green', edgecolor='black', linewidth=1.2, alpha=0.7)
+    plt.scatter(df_imdb.index, df_imdb['durasi'], alpha=0.7, color='green')
     plt.title('Distribusi Durasi Film')
-    plt.xlabel('Durasi Film (Menit)')
-    plt.ylabel('Frekuensi')
+    plt.xlabel('Indeks Data Film')
+    plt.ylabel('Durasi Film (Menit)')
     plt.grid(True)
     st.pyplot(plt)
 
     st.markdown("""
-    Histogram ini menggambarkan distribusi durasi film dalam dataset IMDb-TOP.csv. Sumbar hijau menunjukkan frekuensi jumlah film 
-    berdasarkan rentang durasi film (dalam menit). Dari visualisasi ini, kita dapat melihat bagaimana durasi film terdistribusi di dalam dataset.
+    Scatter plot ini memvisualisasikan distribusi durasi film dari dataset IMDB-TOP.csv. Setiap titik menunjukkan durasi film
+    dari satu data film dalam dataset, di mana posisi titik pada sumbu x merepresentasikan indeks data film dan posisi titik pada
+    sumbu y merepresentasikan durasi film dalam menit.
     """)
 
     # 4. Visualisasi Komposisi: Pie Chart Jumlah Film per Age Rating
