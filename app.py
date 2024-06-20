@@ -51,6 +51,10 @@ if option == 'IMDB Top Movies':
     st.title("Scraping Website IMDB")
     st.write(df_imdb)
 
+      # Convert Weekend Gross and Total Gross to numeric, handling errors
+    df_imdb['Weekend Gross'] = pd.to_numeric(df_imdb['Weekend Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
+    df_imdb['Total Gross'] = pd.to_numeric(df_imdb['Total Gross'].str.replace('[\$,]', '', regex=True), errors='coerce').fillna(0)
+
     # Visualisasi Bar Chart Rating untuk Setiap Judul Film
     st.subheader('Bar Chart Rating untuk Setiap Judul Film')
 
@@ -66,17 +70,17 @@ if option == 'IMDB Top Movies':
     plt.grid(True)
     st.pyplot(plt)
 
-    # Visualisasi Line Histogram Persebaran judul film dengan rate film
+    # Visualisasi Line Histogram Persebaran Rating Film
     st.subheader('Line Histogram Persebaran Rating Film')
     plt.figure(figsize=(12, 6))
     df_imdb['Rate'].value_counts().sort_index().plot(kind='line', marker='o', linestyle='-')
     plt.xlabel('Rating')
-    plt.ylabel('Judul Film')
-    plt.title('Persebaran Rating film')
+    plt.ylabel('Jumlah Film')
+    plt.title('Persebaran Rating Film')
     plt.grid(True)
     st.pyplot(plt)
 
-        # Visualisasi Bubble chart Judul Film dengan Weekend Gross
+    # Visualisasi Bubble chart Judul Film dengan Weekend Gross
     st.subheader('Bubble chart Judul Film dengan Weekend Gross')
     plt.figure(figsize=(12, 8))
     plt.scatter(df_imdb['Judul'], df_imdb['Weekend Gross'], s=df_imdb['Weekend Gross'] / 1e6, alpha=0.5)
@@ -98,7 +102,6 @@ if option == 'IMDB Top Movies':
     plt.title('Donut Chart Rate Film dengan Total Gross')
     plt.axis('equal')
     st.pyplot(plt)
-
 else:
     st.markdown("<h1 style='text-align: center; color: black;'>Dashboard Adventure Works</h1>", unsafe_allow_html=True)
 
