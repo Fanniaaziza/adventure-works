@@ -5,4 +5,4 @@ pandas
 matplotlib
 mysql.connector
 seaborn
-plotly
+plotly.express
