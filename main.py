@@ -1,8 +1,8 @@
 import pymysql
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
 import plotly.express as px
+import plotly.graph_objs as go
 
 # Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
@@ -38,6 +38,26 @@ def load_imdb_data():
 # Streamlit title
 st.title("Final Project Mata Kuliah Data Visualisasi")
 
+# Custom CSS for styling
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f5f5f5;
+    }
+    h1, h2 {
+        color: #4b4b4b;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+    }
+    .css-1aumxhk {
+        color: #4b4b4b;
+    }
+    .sidebar .sidebar-content {
+        background-color: #f0f0f0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Sidebar option untuk memilih data di display
 option = st.sidebar.selectbox(
     'Pilih data yang ingin ditampilkan:',
@@ -54,10 +74,10 @@ if option == 'IMDB Top Movies':
     expected_columns = ['judul', 'tahun', 'durasi', 'age', 'rate']  # kolom yang diharapkan
     if set(expected_columns).issubset(df_imdb.columns):
         # 1. Comparison: Number of Movies per Year
-             year_counts = df_imdb['tahun'].value_counts().sort_index()
+        year_counts = df_imdb['tahun'].value_counts().sort_index()
 
         # Create a bar chart with Plotly
-            fig = px.bar(
+        fig1 = px.bar(
             x=year_counts.index.astype(str), 
             y=year_counts.values, 
             labels={'x': 'Tahun', 'y': 'Jumlah Film'}, 
@@ -67,57 +87,47 @@ if option == 'IMDB Top Movies':
         )
 
         # Customize the appearance
-            fig.update_layout(
+        fig1.update_layout(
             xaxis_title='Tahun',
             yaxis_title='Jumlah Film',
             xaxis_tickangle=-45,
             template='plotly_white'
-            )
+        )
 
         # Display the interactive plot in Streamlit
-        st.plotly_chart(fig)
+        st.plotly_chart(fig1)
 
         st.markdown("""
         Dari visualisasi tersebut dapat di analisis bahwa jumlah film dapat berubah tiap tahunnya, 
         seperti pada tahun 1994 film baru mencapai 2 film. Berbeda dengan tahun sebelumnya yang hanya ada 1 film. 
         """)
-        
+
         # 2. Relationship Visualization: Scatter Plot of Film Duration vs Rate
-        plt.figure(figsize=(10, 6))
-        plt.scatter(df_imdb['durasi'], df_imdb['rate'], alpha=0.5, color='orange')
-        plt.title('Hubungan Antara Durasi Film dan Rate')
-        plt.xlabel('Durasi Film (Menit)')
-        plt.ylabel('Rate')
-        plt.grid(True)
-        st.pyplot(plt)
+        fig2 = px.scatter(df_imdb, x='durasi', y='rate', title='Hubungan Antara Durasi Film dan Rate',
+                          labels={'durasi': 'Durasi Film (Menit)', 'rate': 'Rate'},
+                          color='rate', color_continuous_scale='Viridis')
+        st.plotly_chart(fig2)
 
         st.markdown("""
          Dari visualisasi tersebut dapat di analisis bahwa terdapat hubungan antara durasi film dan rating 
          yang digambarkan dengan terbentuknya pola tren.  
         """)
-            
+
         # 3. Distribution Visualization: Histogram of Film Duration Distribution
-        plt.figure(figsize=(10, 6))
-        plt.hist(df_imdb['durasi'], bins=20, color='green', edgecolor='black')
-        plt.title('Distribusi Durasi Film')
-        plt.xlabel('Durasi Film (Menit)')
-        plt.ylabel('Frekuensi')
-        plt.grid(True)
-        st.pyplot(plt)
+        fig3 = px.histogram(df_imdb, x='durasi', nbins=20, title='Distribusi Durasi Film',
+                            labels={'durasi': 'Durasi Film (Menit)'}, color_discrete_sequence=['green'])
+        st.plotly_chart(fig3)
 
         st.markdown("""
         Dari visualisasi tersebut menggambarkan distribusi durasi film yang ada, 
         dari visualisasi tersebut dapat disimpulkan frekuensi dari masing-masing durasi film yang ada adalah sama, yakni memiliki 1 frekuensi.
         """)
-            
+
         # 4. Composition Visualization: Pie Chart of Movie Count per Age Rating
         age_counts = df_imdb['age'].value_counts()
-
-        plt.figure(figsize=(8, 8))
-        plt.pie(age_counts, labels=age_counts.index, autopct='%1.1f%%', startangle=140)
-        plt.title('Komposisi Film Berdasarkan Age Rating')
-        plt.axis('equal')
-        st.pyplot(plt)
+        fig4 = px.pie(values=age_counts.values, names=age_counts.index, title='Komposisi Film Berdasarkan Age Rating',
+                      labels={'index': 'Age Rating', 'values': 'Jumlah Film'})
+        st.plotly_chart(fig4)
 
         st.markdown("""
         Dari visualisasi tersebut dapat di analisis bahwa film-film ditonton dari berbagai kalangan usia, 
@@ -151,17 +161,10 @@ else:
             # Filter data based on selected year range
             df_filtered = df_sales[(df_sales['Year'] >= year_range[0]) & (df_sales['Year'] <= year_range[1])]
 
-            # Plot comparison of total sales per year using Matplotlib
-            plt.figure(figsize=(12, 6))
-            plt.plot(df_filtered['Year'], df_filtered['TotalSales'], marker='o', linestyle='-', color='b', linewidth=2, markersize=8)
-            plt.title(f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}', fontsize=16)
-            plt.xlabel('Tahun', fontsize=14)
-            plt.ylabel('Total Penjualan', fontsize=14)
-            plt.grid(True)
-
-            # Display plot in Streamlit
-            st.markdown(f"<h2 style='text-align: center;'>Grafik Total Penjualan </h2>", unsafe_allow_html=True)
-            st.pyplot(plt)
+            # Plot comparison of total sales per year using Plotly
+            fig5 = px.line(df_filtered, x='Year', y='TotalSales', title=f'Perbandingan Total Penjualan Tahun {year_range[0]}-{year_range[1]}',
+                           labels={'Year': 'Tahun', 'TotalSales': 'Total Penjualan'}, markers=True)
+            st.plotly_chart(fig5)
 
             st.markdown("""
             Dari visualisasi di atas dapat dilihat adanya kenaikan penjualan tertinggi di tahun 2003 dan penjualan yang menurun di tahun 2004.
@@ -197,27 +200,11 @@ else:
     st.subheader('2. Hubungan Penjualan berdasarkan region')
     st.dataframe(df_bubble)
 
-    # Adjust bubble size for better visibility
-    plt.figure(figsize=(14, 12))
-    plt.scatter(x=df_bubble['Country'], 
-                y=df_bubble['TotalSales'],
-                s=df_bubble['TotalSales'] / 1000,  # Adjust bubble size smaller for better visibility
-                c='b',
-                alpha=0.6,  # Add transparency for better visibility
-                edgecolors='w',  # Add white border to bubbles
-                linewidth=0.5)
-
-    # Add labels for x and y axis and plot title
-    plt.xlabel('Country')
-    plt.ylabel('Total Sales')  
-    plt.title('Bubble Plot Hubungan Wilayah dan Penjualan')
-
-    # Add grid for easier reading of the plot
-    plt.grid(True)
-
-    # Display plot in Streamlit
-    st.markdown("<h2 style='text-align: center;'>Bubble Plot Hubungan Wilayah dan Penjualan</h2>", unsafe_allow_html=True)
-    st.pyplot(plt)
+    # Create a bubble chart using Plotly
+    fig6 = px.scatter(df_bubble, x='Country', y='TotalSales', size='TotalSales', title='Bubble Plot Hubungan Wilayah dan Penjualan',
+                      labels={'Country': 'Wilayah', 'TotalSales': 'Total Penjualan'}, color='TotalSales',
+                      color_continuous_scale='Blues')
+    st.plotly_chart(fig6)
 
     st.markdown("""
         Dari visualisasi di atas dapat dilihat adanya hubungan antara jumlah penjualan dengan region penjualan, region yang memiliki 
@@ -243,15 +230,9 @@ else:
     st.subheader('3. Proporsi Penjualan Berdasarkan Wilayah atau Region')
     st.dataframe(df_sales_by_region)
 
-    # Create visualization of sales proportion per region
-    plt.figure(figsize=(10, 6))
-    plt.pie(df_sales_by_region['TotalSales'], labels=df_sales_by_region['SalesTerritoryRegion'], autopct='%1.1f%%', startangle=140)
-    plt.title('Proporsi Penjualan per Wilayah atau Region')
-    plt.axis('equal')  # Make pie chart a circle
-
-    # Display plot in Streamlit
-    st.markdown("<h2 style='text-align: center;'>Proporsi Penjualan per Wilayah atau Region</h2>", unsafe_allow_html=True)
-    st.pyplot(plt)
+    # Create a pie chart using Plotly
+    fig7 = px.pie(df_sales_by_region, values='TotalSales', names='SalesTerritoryRegion', title='Proporsi Penjualan per Wilayah atau Region')
+    st.plotly_chart(fig7)
 
     st.markdown("""
         Dari visualisasi di atas dapat dilihat prosentase penjualan produk dari berbagai region Australia dan southwest memiliki 
@@ -281,23 +262,11 @@ else:
     st.subheader('4. Komposisi Penjualan Berdasarkan Kategori Produk')
     st.dataframe(df_bar)
 
-    # Create figure and axes
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    # Plot bar (more suitable than histogram for categories)
-    ax.bar(df_bar['ProductCategory'], df_bar['TotalSales'], color='blue')
-
-    # Setting labels        
-    ax.set(title='Komposisi Penjualan per Kategori Produk',
-           ylabel='Total Penjualan',   
-           xlabel='Kategori Produk')
-
-    # Rotate x labels for better readability
-    plt.xticks(rotation=45)
-
-    # Display plot in Streamlit
-    st.markdown("<h2 style='text-align: center;'>Komposisi Penjualan per Kategori Produk</h2>", unsafe_allow_html=True)
-    st.pyplot(fig)
+    # Create bar chart using Plotly
+    fig8 = px.bar(df_bar, x='ProductCategory', y='TotalSales', title='Komposisi Penjualan per Kategori Produk',
+                  labels={'ProductCategory': 'Kategori Produk', 'TotalSales': 'Total Penjualan'},
+                  color='TotalSales', color_continuous_scale='Blues')
+    st.plotly_chart(fig8)
 
     st.markdown("""
         Dari visualisasi di atas dapat dilihat distribusi penjualan berdasarkan dari jenis produknya, penjualan terbesar berasal dari produk sepeda.
