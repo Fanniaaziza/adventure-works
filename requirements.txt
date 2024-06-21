@@ -6,3 +6,4 @@ matplotlib
 mysql.connector
 seaborn
 plotly.express
+plotly.graph_objs
