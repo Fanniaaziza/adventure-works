@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 
 # Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
+    st.write(st.secrets["database"])
     conn = pymysql.connect(
         host=st.secrets["database"]["host"],
-        port=st.secrets["database"]["port"],
+        port=int(st.secrets["database"]["port"]),
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
         db=st.secrets["database"]["db"],
@@ -184,13 +185,14 @@ else:
     
     conn = pymysql.connect(
         host=st.secrets["database"]["host"],
-        port=st.secrets["database"]["port"],
+        port=int(st.secrets["database"]["port"]),
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
         db=st.secrets["database"]["db"],
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
+    
     df_bubble = pd.read_sql(query_bubble, conn)
     conn.close()
     
