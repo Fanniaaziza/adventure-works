@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 # Fungsi untuk memuat Adventure Works data
 def load_adventure_works_data():
-    st.write(st.secrets["database"])
     conn = pymysql.connect(
         host=st.secrets["database"]["host"],
         port=int(st.secrets["database"]["port"]),
