@@ -100,7 +100,7 @@ if option == 'IMDB Top Movies':
         st.markdown(""" <p style='color: black;'>
         Dari visualisasi tersebut dapat di analisis bahwa jumlah film dapat berubah tiap tahunnya, 
         seperti pada tahun 1994 film baru mencapai 2 film. Berbeda dengan tahun sebelumnya yang hanya ada 1 film.</p> 
-        """, unsafe_allow_html=True)
+        """,unsafe_allow_html=True)
         
         # 2. Relationship : Scatter Plot of Film Duration vs Rate
         plt.figure(figsize=(10, 6))
@@ -114,7 +114,7 @@ if option == 'IMDB Top Movies':
         st.markdown(""" <p style='color: black;'>
          Dari visualisasi tersebut dapat di analisis bahwa terdapat hubungan antara durasi film dan rating 
          yang digambarkan dengan terbentuknya pola tren.</p>  
-        """, unsafe_allow_html=True)
+        """,unsafe_allow_html=True)
             
         # 3. Distribution : Histogram of Film Duration Distribution
         plt.figure(figsize=(10, 6))
@@ -128,7 +128,7 @@ if option == 'IMDB Top Movies':
         st.markdown(""" <p style='color: black;'>
         Dari visualisasi tersebut menggambarkan distribusi durasi film yang ada, 
         dari visualisasi tersebut dapat disimpulkan frekuensi dari masing-masing durasi film yang ada adalah sama, yakni memiliki 1 frekuensi.</p>
-        """, unsafe_allow_html=True)
+        """,unsafe_allow_html=True)
         
         # 4. Composition : Pie Chart of Movie Count per Age Rating
         age_counts = df_imdb['age'].value_counts()
@@ -142,7 +142,7 @@ if option == 'IMDB Top Movies':
         st.markdown(""" <p style='color: black;'>
         Dari visualisasi tersebut dapat di analisis bahwa film-film ditonton dari berbagai kalangan usia, 
         pada pie chart tersebut dapat disimpulkan kalangan yang menonton film rata-rata adalah usia remaja.</p> 
-        """, unsafe_allow_html=True)
+        """,unsafe_allow_html=True)
 
     else:
         st.write("Kolom yang diperlukan (judul, tahun, durasi, age, rate) tidak lengkap dalam dataset.")
@@ -155,7 +155,7 @@ else:
     df_sales = load_adventure_works_data()
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader('1. Data Penjualan Tahunan')
+    st.markdown("<p style='color: black; font-size: 18px;'>1. Data Penjualan Tahunan</p>", unsafe_allow_html=True)
     st.dataframe(df_sales)
 
     # cek DataFrame memastikan tidak kosong 
@@ -185,7 +185,7 @@ else:
 
             st.markdown(""" <p style='color: black;'>
             Dari visualisasi di atas dapat dilihat adanya kenaikan penjualan tertinggi di tahun 2003 dan penjualan yang menurun di tahun 2004.</p>
-            """, unsafe_allow_html=True)
+            """,unsafe_allow_html=True)
             
         except Exception as e:
             st.error(f"Terjadi kesalahan: {e}")
@@ -214,7 +214,7 @@ else:
     df_bubble = pd.read_sql(query_bubble, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader('2. Hubungan Penjualan berdasarkan region')
+    st.markdown("<p style='color: black; font-size: 18px;'>2. Hubungan Penjualan berdasarkan region</p>", unsafe_allow_html=True)
     st.dataframe(df_bubble)
 
     # Adjust bubble size for better visibility
@@ -242,7 +242,7 @@ else:
     st.markdown(""" <p style='color: black;'>
         Dari visualisasi di atas dapat dilihat adanya hubungan antara jumlah penjualan dengan region penjualan, region yang memiliki 
         daerah yang luas dan lebih besar cenderung menghasilkan penjualan produk yang besar pula.</p>
-    """, unsafe_allow_html=True)
+    """,unsafe_allow_html=True)
 
     # Query data pie chart
     query_pie = '''
@@ -260,7 +260,7 @@ else:
     df_sales_by_region = pd.read_sql(query_pie, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader('3. Proporsi Penjualan Berdasarkan Wilayah atau Region')
+    st.markdown("<p style='color: black; font-size: 18px;'>3. Proporsi Penjualan Berdasarkan Wilayah atau Region</p>", unsafe_allow_html=True)
     st.dataframe(df_sales_by_region)
 
     # Create visualization of sales proportion per region
@@ -276,7 +276,7 @@ else:
     st.markdown(""" <p style='color: black;'>
         Dari visualisasi di atas dapat dilihat prosentase penjualan produk dari berbagai region Australia dan southwest memiliki 
         prosentase penjualan tertinggi.</p>
-    """, unsafe_allow_html=True)
+    """,unsafe_allow_html=True)
 
     # Query data bar chart
     query_bar = '''
@@ -298,7 +298,7 @@ else:
     df_bar = pd.read_sql(query_bar, conn)
 
     # Menampilkan DataFrame di Streamlit sebagai tabel
-    st.subheader('4. Komposisi Penjualan Berdasarkan Kategori Produk')
+    st.markdown("<p style='color: black; font-size: 18px;'>4. Komposisi Penjualan Berdasarkan Kategori Produk</p>", unsafe_allow_html=True)
     st.dataframe(df_bar)
 
     # Membuat figure and axes
@@ -321,7 +321,7 @@ else:
 
     st.markdown(""" <p style='color: black;'>
         Dari visualisasi di atas dapat dilihat distribusi penjualan berdasarkan dari jenis produknya, penjualan terbesar berasal dari produk sepeda.</p>
-    """, unsafe_allow_html=True)
+    """,unsafe_allow_html=True)
 
     # Menutup koneksi setelah digunakan
     conn.close()
